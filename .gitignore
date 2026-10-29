@@ -1,0 +1,11 @@
+# Hanya skrip, patch, config, dan hasil kecil yang di-backup ke GitHub.
+# Jangan pernah commit token, password, data, atau bobot model.
+*.ckpt
+*.safetensors
+*.zip
+*token*
+.env
+__pycache__/
+
+# Pengecualian: bobot ToMMeR hasil training kecil (~1 MB), boleh di-backup
+!runs/**/model.safetensors

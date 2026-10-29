@@ -1,0 +1,46 @@
+diff --git a/experiments/xp_learnTokenMatching.py b/experiments/xp_learnTokenMatching.py
+index 7fecad4..0019d88 100644
+--- a/experiments/xp_learnTokenMatching.py
++++ b/experiments/xp_learnTokenMatching.py
+@@ -150,6 +150,10 @@ def process_model(
+ 
+     gpulauncher = find_launcher(cfg.launcher, tags=["slurm"])
+     eval_launcher = find_launcher(cfg.eval_launcher, tags=["slurm"])
++    for _launcher in (gpulauncher, eval_launcher):  # env folder kelompok -> job
++        _launcher.environ.update({k: os.environ[k] for k in ("HF_HOME", "XDG_CACHE_HOME", "XDG_CONFIG_HOME",
++                                  "XDG_DATA_HOME", "TORCH_HOME", "NER_DATA", "CUDA_VISIBLE_DEVICES")
++                                  if k in os.environ})
+ 
+     logging.info(f"Launching Task using launcher: {gpulauncher}")
+     # Submit the task and get the model loader
+@@ -166,7 +170,7 @@ def process_model(
+     )
+ 
+     # Add to tensorboard service
+-    tb_service.add(task, task.runpath)
++    pass  # TensorBoard service dimatikan
+ 
+     # Launch Flat benchmark evaluations
+     for strat in cfg.flat_decoder_strategies:
+@@ -329,7 +333,7 @@ def run(helper: ExperimentHelper, cfg: Configuration):
+         folder.mkdir(exist_ok=True, parents=True)
+ 
+     # Tensorboard service
+-    tb_service = helper.xp.add_service(TensorboardService(runpath))
++    tb_service = None  # TensorBoard service dimatikan
+ 
+     ###### LLM Annotation ######
+     # Launch LLM annotation task for each annotator
+diff --git a/src/llm2ner/models/model.py b/src/llm2ner/models/model.py
+index a06c4a6..adc7a62 100644
+--- a/src/llm2ner/models/model.py
++++ b/src/llm2ner/models/model.py
+@@ -1109,7 +1109,7 @@ def train_lightning(
+     original_stdout = sys.stdout
+     sys.stdout = sys.stderr
+     try:
+-        trainer.fit(lightning_model, train_loader, val_loader)
++        trainer.fit(lightning_model, train_loader, val_loader, ckpt_path=(lambda p: p.read_text().strip() if p.exists() else None)(__import__('pathlib').Path('/mnt/home/probation-02/kelompok14/tommer/resume_ckpt_path')))
+     finally:
+         sys.stdout = original_stdout
+ 
