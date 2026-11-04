@@ -1,0 +1,96 @@
+diff --git a/experiments/xp_learnTokenMatching.py b/experiments/xp_learnTokenMatching.py
+index 7fecad4..391c910 100644
+--- a/experiments/xp_learnTokenMatching.py
++++ b/experiments/xp_learnTokenMatching.py
+@@ -150,6 +150,10 @@ def process_model(
+ 
+     gpulauncher = find_launcher(cfg.launcher, tags=["slurm"])
+     eval_launcher = find_launcher(cfg.eval_launcher, tags=["slurm"])
++    for _launcher in (gpulauncher, eval_launcher):
++        _launcher.environ.update({k: os.environ[k] for k in ("HF_HOME", "HF_HUB_OFFLINE", "XDG_CACHE_HOME", "XDG_CONFIG_HOME",
++                                  "XDG_DATA_HOME", "TORCH_HOME", "NER_DATA", "CUDA_VISIBLE_DEVICES")
++                                  if k in os.environ})
+ 
+     logging.info(f"Launching Task using launcher: {gpulauncher}")
+     # Submit the task and get the model loader
+@@ -166,7 +170,7 @@ def process_model(
+     )
+ 
+     # Add to tensorboard service
+-    tb_service.add(task, task.runpath)
++    pass
+ 
+     # Launch Flat benchmark evaluations
+     for strat in cfg.flat_decoder_strategies:
+@@ -329,7 +333,7 @@ def run(helper: ExperimentHelper, cfg: Configuration):
+         folder.mkdir(exist_ok=True, parents=True)
+ 
+     # Tensorboard service
+-    tb_service = helper.xp.add_service(TensorboardService(runpath))
++    tb_service = None
+ 
+     ###### LLM Annotation ######
+     # Launch LLM annotation task for each annotator
+diff --git a/src/llm2ner/distillation.py b/src/llm2ner/distillation.py
+index e751aff..b6de32b 100644
+--- a/src/llm2ner/distillation.py
++++ b/src/llm2ner/distillation.py
+@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader
+ from transformer_lens import HookedTransformer
+ from transformers import PreTrainedModel
+ 
+-from llm2ner.models import NERmodel, train_lightning
++from llm2ner.models import NERmodel, manual_train
+ from llm2ner.losses import balanced_BCE
+ 
+ 
+@@ -156,12 +156,12 @@ def distill_step(
+         return_tensors="pt",
+         truncation=True,
+     )
+-    tokens = inputs["input_ids"].to(self.device)  # shape (batch, seq)
+-    attn_mask = inputs["attention_mask"].to(self.device)
++    tokens = inputs["input_ids"].to(model.device)  # shape (batch, seq)
++    attn_mask = inputs["attention_mask"].to(model.device)
+ 
+     gt_spans = batch[
+         "pattern"
+-    ].to(self.device)  # data must be in 'last' mode <-> patterns are span labels
++    ].to(model.device)  # data must be in 'last' mode <-> patterns are span labels
+ 
+     # Forward pass through the teacher model
+     with torch.no_grad():
+@@ -241,9 +241,8 @@ def train_distill(
+             "
+     )
+ 
+-    return train_lightning(
++    return manual_train(
+         student,
+-        model=model,
+         train_loader=train_loader,
+         val_loader=val_loader,
+         optimizer=optimizer,
+diff --git a/src/llm2ner/models/TokenMatching.py b/src/llm2ner/models/TokenMatching.py
+index 8fe5200..b415444 100644
+--- a/src/llm2ner/models/TokenMatching.py
++++ b/src/llm2ner/models/TokenMatching.py
+@@ -44,6 +44,7 @@ from llm2ner.models.model import (
+     DEFAULT_KERNEL_PADDING,
+     NERmodel,
+     train_lightning,
++    manual_train,
+ )
+ 
+ 
+@@ -1931,9 +1932,8 @@ class TokenMatchingNER(NERmodel):
+         gc.collect()
+         torch.cuda.empty_cache()
+ 
+-        hist = train_lightning(
++        hist = manual_train(
+             self,
+-            model=train_loader.dataset.model,
+             train_loader=train_loader,
+             val_loader=val_loader,
+             optimizer=optimizer,

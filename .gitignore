@@ -11,3 +11,5 @@ __pycache__/
 !runs/**/model.safetensors
 
 !saved_models/**/model.safetensors
+
+!fixed/models/**/model.safetensors
