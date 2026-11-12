@@ -1,0 +1,10 @@
+Diunduh 2026-11-11/12 dari GitHub raw.
+klue-ner-v1.1_dev.tsv        KLUE-benchmark/KLUE                     CC BY-SA 4.0 (dev; test tidak dirilis)
+stockmark_ner.json           stockmarkteam/ner-wikipedia-dataset     CC BY-SA 3.0
+msra_test_bio.txt            OYE93/Chinese-NLP-Corpus (NER/MSRA)     riset, JANGAN masuk repo publik
+indo/NER_UI, indo/NER_UGM    indo_ner_json_v4 (pekerjaan Indonesia sebelumnya)
+uner/*_pud-ud-test.iob2      UniversalNER/UNER_{English,Swedish,Russian,Chinese}-PUD (master)   CC BY-SA 4.0
+uner/zh_gsdsimp-ud-test.iob2 UniversalNER/UNER_Chinese-GSDSIMP       CC BY-SA 4.0
+uner/pud_sent_id.json        sent_id UD-PUD per kalimat UNER, dicocokkan lewat teks persis dengan file .conllu UD
+                             (UD_Chinese-PUD commit 551391d6, UD_{English,Russian,Swedish}-PUD master). 998 kalimat cocok di 4 bahasa.
+                             de dan pt tidak dipakai: teks UNER dan UD versi sekarang hanya 74% / 29% cocok.

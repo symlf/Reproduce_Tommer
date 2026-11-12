@@ -1,0 +1,38 @@
+== A. Transisi per entitas (kalimat dan entitas sama): versi pertama -> versi kedua ==
+  WikiANN_zh_spasi -> WikiANN_zh_alami
+     semua          n  50056 | keduanya  36.2%  hanya_pertama   4.5%  hanya_kedua  39.5%  tidak_keduanya  19.7%
+     dalam_kalimat  n  46984 | keduanya  33.7%  hanya_pertama   4.7%  hanya_kedua  40.8%  tidak_keduanya  20.8%
+     seluruh_baris  n   3072 | keduanya  75.2%  hanya_pertama   0.8%  hanya_kedua  20.9%  tidak_keduanya   3.1%
+  WikiANN_ja_spasi -> WikiANN_ja_alami
+     semua          n  56368 | keduanya  47.4%  hanya_pertama   6.8%  hanya_kedua  28.2%  tidak_keduanya  17.6%
+     dalam_kalimat  n  53131 | keduanya  45.3%  hanya_pertama   7.1%  hanya_kedua  29.0%  tidak_keduanya  18.6%
+     seluruh_baris  n   3237 | keduanya  81.0%  hanya_pertama   1.6%  hanya_kedua  15.7%  tidak_keduanya   1.7%
+  WikiANN_en_spasi -> WikiANN_en_karakter
+     semua          n  55887 | keduanya  55.7%  hanya_pertama  28.7%  hanya_kedua   2.1%  tidak_keduanya  13.6%
+     dalam_kalimat  n  43429 | keduanya  66.1%  hanya_pertama  26.7%  hanya_kedua   1.3%  tidak_keduanya   5.9%
+     seluruh_baris  n  12458 | keduanya  19.5%  hanya_pertama  35.4%  hanya_kedua   4.9%  tidak_keduanya  40.2%
+  WikiANN_ar_alami -> WikiANN_ar_karakter
+     semua          n  45027 | keduanya  23.8%  hanya_pertama  42.9%  hanya_kedua   1.5%  tidak_keduanya  31.7%
+     seluruh_baris  n   3824 | keduanya   7.9%  hanya_pertama  55.7%  hanya_kedua   0.2%  tidak_keduanya  36.2%
+     dalam_kalimat  n  41203 | keduanya  25.3%  hanya_pertama  41.7%  hanya_kedua   1.7%  tidak_keduanya  31.3%
+  WikiANN_ko_alami / WikiANN_ko_karakter: prediksi belum ada
+
+== B. Kontrol format (threshold 0.5, semua kalimat). lift = P model / P acak ==
+  set                                     P      R     F1 tebakan/kal  P_acak   lift
+  WikiANN_zh_spasi                      6.3   40.7   10.9        8.08    0.24   25.9
+  WikiANN_zh_alami                     21.6   75.8   33.6        4.39    0.50   43.4
+
+  WikiANN_ja_spasi                      7.4   54.1   13.0       10.31    0.18   40.9
+  WikiANN_ja_alami                     24.7   75.5   37.3        4.31    0.39   62.8
+
+  WikiANN_en_spasi                     33.5   84.4   48.0        3.53    1.46   22.9
+  WikiANN_en_karakter                   9.3   57.8   15.9        8.73    0.17   53.2
+
+  WikiANN_ar_alami                     15.3   66.7   25.0        4.89    0.99   15.5
+  WikiANN_ar_karakter                   1.2   25.4    2.2       24.32    0.19    6.1
+
+  WikiANN_ko_alami                   (belum ada prediksi)
+  WikiANN_ko_karakter                (belum ada prediksi)
+
+  WikiANN_zh_spasi                      6.3   40.7   10.9        8.08    0.24   25.9
+  WikiANN_zh_spasi_tanpa_pagar          5.7   35.1    9.8        7.68    0.25   22.7
